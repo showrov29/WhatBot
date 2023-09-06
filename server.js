@@ -1,4 +1,5 @@
 const TelegramBot = require("node-telegram-bot-api");
+const { fetchContest } = require("./helper/codeForce");
 require("dotenv").config();
 // Replace 'YOUR_TOKEN' with your bot's API token
 const TOKEN = process.env.BOT_TOKEN;
@@ -16,9 +17,10 @@ bot.onText(/\/start/, (msg) => {
 });
 
 // Message handler
-bot.on("message", (msg) => {
+bot.on("message", async (msg) => {
 	const chatId = msg.chat.id;
-
+	let data = await fetchContest();
+	// console.log("🚀 ~ file: server.js:23 ~ bot.on ~ data:", data);
 	// Check if the received message is a text message
 	if (msg.text) {
 		bot.sendMessage(chatId, msg.text);
