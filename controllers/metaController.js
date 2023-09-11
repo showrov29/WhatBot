@@ -1,3 +1,5 @@
+const { sendPayload } = require("../helper/payload");
+
 require("dotenv").config();
 
 const metaVerification = (req, res) => {
@@ -15,6 +17,7 @@ const metaVerification = (req, res) => {
 
 const metaData = (req, res) => {
 	const data = req.body;
+
 	if (data) {
 		const senderContacts = data["entry"][0]["changes"][0]["value"]["contacts"];
 		const status =
@@ -25,6 +28,9 @@ const metaData = (req, res) => {
 			data["entry"][0]["changes"][0]["value"]["messages"]?.[0]["text"]["body"];
 
 		const userNumber = senderContacts && senderContacts[0]["wa_id"];
+		if (userNumber !== undefined) {
+			sendPayload("*I am on* 👻👻", userNumber);
+		}
 	}
 	res.sendStatus(200);
 };

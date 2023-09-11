@@ -1,30 +1,27 @@
-const TelegramBot = require("node-telegram-bot-api");
-const { fetchContest } = require("./helper/codeForce");
-require("dotenv").config();
-// Replace 'YOUR_TOKEN' with your bot's API token
-const TOKEN = process.env.BOT_TOKEN;
-
-// Create a new bot instance
-const bot = new TelegramBot(TOKEN, { polling: true });
-
-// Command handler for /start command
-bot.onText(/\/start/, (msg) => {
-	const chatId = msg.chat.id;
-	bot.sendMessage(
-		chatId,
-		"Hello! I'm your echo bot. Send me a message and I'll echo it back."
-	);
+const express = require("express");
+const mongoose = require("mongoose");
+const cron = require("node-cron");
+const metaRoutes = require("./routes/meta.routes");
+const noticeRoutes = require("./routes/notice.routes");
+const { default: axios } = require("axios");
+const server = express();
+server.use(express.json());
+server.use("/", metaRoutes);
+server.use("/", noticeRoutes);
+const dbConnect = async () => {
+	mongoose.connect(process.env.MONGO_URL).then(() => console.log("Connected!"));
+};
+server.listen(8000, (req, res) => {
+	cron.schedule("*/5 * * * *", async () => {
+		await axios
+			.get("http://localhost:8000/api/check-notice")
+			.then((response) => {
+				console.log(true);
+			})
+			.catch((err) => {
+				console.log(err.message);
+			});
+	});
+	dbConnect();
+	console.log("listening on port 8000");
 });
-
-// Message handler
-bot.on("message", async (msg) => {
-	const chatId = msg.chat.id;
-	let data = await fetchContest();
-	// console.log("🚀 ~ file: server.js:23 ~ bot.on ~ data:", data);
-	// Check if the received message is a text message
-	if (msg.text) {
-		bot.sendMessage(chatId, msg.text);
-	}
-});
-
-console.log("Bot is running...");

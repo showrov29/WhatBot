@@ -10,7 +10,7 @@ const fetchContest = async () => {
 			response.data.result[0]
 		);
 
-		return response;
+		return response.data.result[0];
 	} catch (e) {
 		console.log(e.message);
 	}
