@@ -14,7 +14,7 @@ const dbConnect = async () => {
 server.listen(process.env.PORT, (req, res) => {
 	cron.schedule("*/5 * * * *", async () => {
 		await axios
-			.get("http://localhost:8000/api/check-notice")
+			.get(process.env.localhost + "/api/check-notice")
 			.then((response) => {
 				console.log(true);
 			})
