@@ -11,7 +11,7 @@ server.use("/", noticeRoutes);
 const dbConnect = async () => {
 	mongoose.connect(process.env.MONGO_URL).then(() => console.log("Connected!"));
 };
-server.listen(8000, (req, res) => {
+server.listen(process.env.PORT, (req, res) => {
 	cron.schedule("*/5 * * * *", async () => {
 		await axios
 			.get("http://localhost:8000/api/check-notice")

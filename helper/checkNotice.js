@@ -32,7 +32,7 @@ const checkNotice = async (req, res) => {
 
 				if (isNotice.length == 0) {
 					console.log(data);
-					array.forEach(async (element) => {
+					phoneNumber.forEach(async (element) => {
 						await sendPayload(noticeText, element);
 					});
 					await newNotice.save();
