@@ -12,16 +12,20 @@ const dbConnect = async () => {
 	mongoose.connect(process.env.MONGO_URL).then(() => console.log("Connected!"));
 };
 server.listen(process.env.PORT, (req, res) => {
-	cron.schedule("*/5 * * * *", async () => {
-		await axios
-			.get(process.env.localhost + "/api/check-notice")
-			.then((response) => {
-				console.log(true);
-			})
-			.catch((err) => {
-				console.log(err.message);
-			});
-	});
+	try {
+		cron.schedule("*/5 * * * *", async () => {
+			await axios
+				.get(process.env.localhost + "/api/check-notice")
+				.then((response) => {
+					console.log(true);
+				})
+				.catch((err) => {
+					console.log(err.message);
+				});
+		});
+	} catch (err) {
+		console.log(err.meesage);
+	}
 	dbConnect();
 	console.log("listening on port 8000");
 });
